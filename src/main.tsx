@@ -5,8 +5,19 @@ import { createRoot } from 'react-dom/client';
 
 import { App } from './app/app.tsx';
 
-createRoot(document.getElementById('root')!).render(
-    <App />
-  // <StrictMode>
-  // </StrictMode>
-);
+const bootstrap = async (): Promise<void> => {
+  if (import.meta.env.DEV) {
+    const { worker } = await import('@/mocks/browser');
+    await worker.start({
+      onUnhandledRequest: 'bypass',
+    });
+  }
+
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+};
+
+bootstrap();
