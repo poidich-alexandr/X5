@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "types": ["vitest/globals", "vite/client", "jsdom"]
+  },
+  "include": [
+    "src/**/*.test.*",
+    "src/**/*.spec.*",
+    "src/**/__tests__/**",
+    "src/test/**",
+    "vitest.setup.ts"
+  ]
+}
