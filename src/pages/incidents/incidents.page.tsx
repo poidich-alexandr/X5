@@ -7,18 +7,20 @@ export const IncidentsPage = () => {
     queryKey: ['incidents'],
     queryFn: ({ signal }) => api.getIncidents({ signal }),
   });
-
-  if (isLoading) return <div>Loading…</div>;
   if (isError) return <div>Something went wrong</div>;
 
   return (
     <div>
       <h1>Incidents</h1>
-      <ul>
-        {data?.items.map((incident) => (
-          <li key={incident.id}>{incident.title}</li>
-        ))}
-      </ul>
+      {isLoading ? (
+        <div>Loading…</div>
+      ) : (
+        <ul>
+          {data?.items.map((incident) => (
+            <li key={incident.id}>{incident.title}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
