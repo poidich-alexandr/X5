@@ -1,11 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
-import type { ReactNode } from 'react';
 import { createMemoryRouter, type RouteObject,RouterProvider } from 'react-router';
 
 type TOptions = {
   entryRoute?: string;
-  // routes: { path: string; element: ReactNode }[];
   routes: RouteObject[];
 };
 

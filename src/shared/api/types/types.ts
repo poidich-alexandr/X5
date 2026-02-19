@@ -1,3 +1,5 @@
+import type { TIncidentPriority, TIncidentStatus, TSort } from '@/shared/hooks/use-query-params';
+
 export type TIncidentsListResponse = {
   items: { id: string; title: string }[];
 };
@@ -13,4 +15,13 @@ export type TIncidentDetailsResponse = {
     reporter: string;
   };
   notes: { id: string; message: string; createdAt: string }[];
+};
+
+export type TIncidentsRequest = {
+  query?: string;
+  status?: TIncidentStatus;
+  priority?: TIncidentPriority;
+  sort?: TSort;
+  page?: string;
+  limit?: string;
 };

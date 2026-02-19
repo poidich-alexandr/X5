@@ -1,10 +1,16 @@
 import { apiInstance as api } from './api-instance';
-import type { TIncidentDetailsResponse, TIncidentsListResponse } from './types/types';
+import type { TIncidentDetailsResponse, TIncidentsListResponse, TIncidentsRequest } from './types/types';
 
-export const getIncidents = async (options?: {
-  signal?: AbortSignal;
-}): Promise<TIncidentsListResponse> => {
-  const { data } = await api.get<TIncidentsListResponse>('incidents', { signal: options?.signal });
+export const getIncidents = async (
+  params: TIncidentsRequest,
+  options?: {
+    signal?: AbortSignal;
+  }
+): Promise<TIncidentsListResponse> => {
+  const { data } = await api.get<TIncidentsListResponse>('incidents', {
+    params,
+    signal: options?.signal,
+  });
   return data;
 };
 
