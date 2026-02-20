@@ -1,6 +1,6 @@
-import { delay,http, HttpResponse } from 'msw';
+import { delay, http, HttpResponse } from 'msw';
 
-import { type Incident, incidentsStore, type Note,notesStore } from './store';
+import { type Incident, incidentsStore, type Note, notesStore } from './store';
 
 type IncidentsListResponse = {
   items: Incident[];
@@ -89,8 +89,12 @@ export const handlers = [
 
     let filtered = incidentsStore.filter((incident) => matchesQuery(incident, query));
 
-    if (status) filtered = filtered.filter((incident) => incident.status === status);
-    if (priority) filtered = filtered.filter((incident) => incident.priority === priority);
+    if (status) {
+      filtered = filtered.filter((incident) => incident.status === status);
+    }
+    if (priority) {
+      filtered = filtered.filter((incident) => incident.priority === priority);
+    }
 
     filtered = sortIncidents(filtered, sort);
 

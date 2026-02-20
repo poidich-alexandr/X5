@@ -5,14 +5,14 @@ export type TSearchParams = {
   query?: string;
   status?: TIncidentStatus;
   priority?: TIncidentPriority;
-  sort?: TSort;
+  sort?: TPrioritySort;
   page?: string;
   limit?: string;
 };
 
-export type TIncidentPriority = 'low' | 'medium' | 'high';
-export type TIncidentStatus = 'new' | 'in_progress' | 'resolved';
-export type TSort = 'newest' | 'oldest';
+export type TIncidentPriority = 'low' | 'medium' | 'high' | 'allPriorities';
+export type TIncidentStatus = 'new' | 'in_progress' | 'resolved' | 'allStatus';
+export type TPrioritySort = 'newest' | 'oldest';
 
 export const useQueryParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,11 +21,14 @@ export const useQueryParams = () => {
     (params: TSearchParams, searchParams?: URLSearchParams) => {
       const newParams = new URLSearchParams(searchParams);
 
+      console.log('params', Object.entries(params));
+
       Object.entries(params).forEach(([key, value]) => {
         if (isValidParamValue(value)) {
           newParams.set(key, String(value));
         } else {
           newParams.delete(key);
+          console.log('del');
         }
       });
 
@@ -67,7 +70,7 @@ export const useQueryParams = () => {
 };
 
 const isValidParamValue = (value: unknown): boolean => {
-  if (value == null) return false;
+  if (value == undefined) return false;
 
   if (Array.isArray(value)) {
     return value.length > 0 && value.every(isValidParamValue);

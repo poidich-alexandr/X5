@@ -1,0 +1,242 @@
+.root {
+  --bg-trigger: rgba(17, 19, 34, 0.8);
+  --color-trigger: #fff;
+  --border-trigger: #685cf7;
+  --border-hover-trigger: #a1a1a1;
+
+  --bg-dropdown: #1d112e;
+  --color-dropdown: #fff;
+  --border-dropdown: #685cf7;
+
+  --bg-option: transparent;
+
+  --bg-hover-option: #111221;
+  --color-hover-option: #fff;
+
+  position: relative;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  width: 100%;
+  min-height: 42px;
+  padding: 15px 40px;
+
+  font-size: 22px;
+
+  border: 1px var(--border-trigger) solid;
+  border-radius: 40px;
+
+  background-color: var(--bg-trigger);
+  color: var(--color-trigger);
+
+  transition: all 0.3s;
+  cursor: pointer;
+  outline: none;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  @media (max-width: 767px) {
+    padding: 15px 20px;
+    min-height: 32px;
+  }
+
+  &:hover {
+    border-color: var(--border-hover-trigger);
+  }
+
+  &:focus {
+    border-color: #3069e5;
+    box-shadow: 0 0 4px 0 rgb(14 70 192 / 40%);
+  }
+
+  &:disabled {
+    border-color: #c9c9c9;
+    background-color: #eaeaea;
+    cursor: auto;
+
+    & span {
+      color: #c9c9c9;
+    }
+
+    & > svg path {
+      fill: #c9c9c9;
+    }
+
+    & svg {
+      flex-shrink: 0;
+
+      & path {
+        transition: all 0.3s;
+      }
+    }
+  }
+
+  &.activeTrigger {
+    & svg:last-of-type {
+      transform: rotate(180deg);
+      transition: all 0.3s;
+    }
+  }
+}
+
+.triggerButtonText {
+  font-size: 22px;
+  text-align: start;
+  transition: all 0.3s;
+
+  @media (max-width: 767px) {
+    font-size: 18px;
+  }
+}
+
+.triggerIcon {
+  display: flex;
+
+  & svg {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+
+    @media (max-width: 767px) {
+      width: 16px;
+      height: 16px;
+    }
+
+    & path {
+      transition: all 0.3s;
+    }
+  }
+}
+
+.dropdown {
+  max-height: 1px; //убираю высоту в initial состоянии
+  height: 1px; //убираю высоту в initial состоянии
+  overflow: hidden;
+
+  position: absolute;
+  z-index: 5;
+  top: 60px;
+  right: 0;
+  left: 0;
+  box-shadow: 0 8px 16px 0 rgb(0 0 0 / 10%);
+  overflow: auto;
+  transition: all 0.3s;
+  transform: translateY(-10px);
+
+  background-color: var(--bg-dropdown);
+
+  border: 1px var(--border-dropdown) solid;
+  border-radius: 40px;
+  opacity: 0;
+
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  pointer-events: none;
+
+  &.dropdownOpen {
+    height: auto;
+    max-height: none;
+
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px; /* ширина вертикального скролла */
+  }
+  &::-webkit-scrollbar {
+    width: 4px; /* ширина вертикального скролла */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888; /* цвет ползунка */
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent; /* фон трека */
+  }
+}
+
+.menuList {
+  max-height: 1px; //убираю высоту в initial состоянии
+  height: 1px; //убираю высоту в initial состоянии
+  overflow: hidden;
+
+  display: grid;
+  justify-items: start;
+  padding: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+  list-style-type: none;
+
+  &.listOpen {
+    padding: 10px 0;
+    pointer-events: all;
+    height: auto;
+    max-height: none;
+  }
+}
+
+.optionItem {
+  width: 100%;
+  overflow: hidden;
+}
+
+.optionButton {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  padding: 12px 39px;
+  border: none;
+  background-color: var(--bg-option);
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+  outline: none;
+  color: var(--color-dropdown);
+
+  font-weight: 500;
+
+  @media (max-width: 767px) {
+    padding: 8px 39px;
+  }
+  @media (max-width: 389px) {
+    padding: 6px 20px 6px 39px;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: var(--bg-hover-option);
+    color: var(--color-hover-option);
+    font-weight: 700;
+  }
+
+  & > svg {
+    flex-shrink: 0;
+  }
+}
+
+.optionButtonText {
+  font-size: 20px;
+  text-align: left;
+  transition: all 0.3s;
+
+  @media (max-width: 767px) {
+    font-size: 18px;
+  }
+}
+
+.optionButtonTextActive {
+  font-weight: 600;
+}
