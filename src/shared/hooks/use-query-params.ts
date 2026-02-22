@@ -1,18 +1,24 @@
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router';
 
+// import type {
+//   TIncidentPriorityParam,
+//   TIncidentSortParam,
+//   TIncidentStatusParam,
+// } from '../api/types/client.types';
+
 export type TSearchParams = {
   query?: string;
-  status?: TIncidentStatus;
-  priority?: TIncidentPriority;
-  sort?: TPrioritySort;
+  status?: TIncidentStatusParam;
+  priority?: TIncidentPriorityParam;
+  sort?: TIncidentSortParam;
   page?: string;
   limit?: string;
 };
 
-export type TIncidentPriority = 'low' | 'medium' | 'high' | 'allPriorities';
-export type TIncidentStatus = 'new' | 'in_progress' | 'resolved' | 'allStatus';
-export type TPrioritySort = 'newest' | 'oldest';
+export type TIncidentPriorityParam = 'low' | 'medium' | 'high';
+export type TIncidentStatusParam = 'new' | 'in_progress' | 'resolved';
+export type TIncidentSortParam = 'newest' | 'oldest';
 
 export const useQueryParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();

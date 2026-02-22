@@ -3,14 +3,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 
 import { api } from '@/shared/api';
-import type { TIncidentsListResponse } from '@/shared/api/types/types';
+import type { TIncidentsListResponse } from '@/shared/api/types/server.types';
 import { useQueryParams } from '@/shared/hooks/use-query-params';
 import { Dropdown } from '@/shared/ui/dropdown/dropdown';
 import { debounce } from '@/shared/utils/debounce';
 import { getInitialDropdownOption } from '@/shared/utils/get-initial-dropdown-options';
 import { parsePositiveInteger } from '@/shared/utils/parse-positive-integer';
 
-import { priorityOptions, sortOptions, statusOptions } from './consts/incidents.consts';
+import { priorityOptions, sortOptions, statusOptions } from './model/consts/incidents.consts';
 import cls from './incidents.page.module.scss';
 import { isPriorityType, isSortType, isStatusType } from './model/guards';
 import { Pagination } from './ui/pagination';
@@ -102,8 +102,6 @@ export const IncidentsPage = () => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setQueryInputValue(queryFromUrl);
   }, [params.query]);
-
-  
 
   if (isError) {
     return <div>Failed to load incidents</div>;

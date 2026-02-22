@@ -1,4 +1,4 @@
-import type { TIncidentsListResponse } from '@/shared/api/types/types';
+import type { TIncidentsListResponse } from '@/shared/api/types/server.types';
 
 import cls from './pagination.module.scss';
 

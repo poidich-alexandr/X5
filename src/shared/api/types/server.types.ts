@@ -1,8 +1,11 @@
-import type {
-  TIncidentPriority,
-  TIncidentStatus,
-  TPrioritySort,
-} from '@/shared/hooks/use-query-params';
+
+export type TIncidentPriorityDTO = 'low' | 'medium' | 'high';
+export type TIncidentStatusDTO = 'new' | 'in_progress' | 'resolved';
+export type TPrioritySortDTO = 'newest' | 'oldest';
+
+
+// ----------------------------------------
+//Response
 
 export type TIncidentsListResponse = {
   items: { id: string; title: string }[];
@@ -17,19 +20,25 @@ export type TIncidentDetailsResponse = {
     id: string;
     title: string;
     description: string;
-    status: string;
-    priority: string;
+    status: TIncidentStatusDTO;
+    priority: TIncidentPriorityDTO;
     createdAt: string;
     reporter: string;
   };
   notes: { id: string; message: string; createdAt: string }[];
 };
 
+
+
+
+// ----------------------------------------
+//Request
+
 export type TIncidentsRequest = {
   query?: string;
-  status?: TIncidentStatus;
-  priority?: TIncidentPriority;
-  sort?: TPrioritySort;
+  status?: TIncidentStatusDTO;
+  priority?: TIncidentPriorityDTO;
+  sort?: TPrioritySortDTO;
   page?: string;
   limit?: string;
 };

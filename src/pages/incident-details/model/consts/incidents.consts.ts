@@ -1,10 +1,7 @@
-import type { IDropDownOption } from '@/shared/ui/dropdown/dropdown';
+import type { IDropDownOption } from '../../../../shared/ui/dropdown/dropdown';
 
-export const priorityOptions: IDropDownOption[] = [
-  {
-    text: 'All',
-    value: 'allPriorities',
-  },
+export const priorityDetailOptions: IDropDownOption[] = [
+  //нет all
   {
     text: 'Low',
     value: 'low',
@@ -18,11 +15,9 @@ export const priorityOptions: IDropDownOption[] = [
     value: 'high',
   },
 ];
-export const statusOptions: IDropDownOption[] = [
-  {
-    text: 'All',
-    value: 'allStatus',
-  },
+
+export const statusDetailOptions: IDropDownOption[] = [
+  //нет all
   {
     text: 'In progress',
     value: 'in_progress',
@@ -37,7 +32,8 @@ export const statusOptions: IDropDownOption[] = [
   },
 ];
 
-export const sortOptions: IDropDownOption[] = [
+export const sortDetailOptions: IDropDownOption[] = [
+  //такой же как в incidentspage
   {
     text: 'new first',
     value: 'newest',
