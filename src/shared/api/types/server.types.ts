@@ -1,21 +1,19 @@
-
 export type TIncidentPriorityDTO = 'low' | 'medium' | 'high';
 export type TIncidentStatusDTO = 'new' | 'in_progress' | 'resolved';
-export type TPrioritySortDTO = 'newest' | 'oldest';
-
+export type TIncidentSortDTO = 'newest' | 'oldest';
 
 // ----------------------------------------
 //Response
 
-export type TIncidentsListResponse = {
+export interface IIncidentsListResponse {
   items: { id: string; title: string }[];
   page: number;
   limit: number;
   totalItems: number;
   totalPages: number;
-};
+}
 
-export type TIncidentDetailsResponse = {
+export interface IIncidentDetailsResponse {
   incident: {
     id: string;
     title: string;
@@ -26,19 +24,31 @@ export type TIncidentDetailsResponse = {
     reporter: string;
   };
   notes: { id: string; message: string; createdAt: string }[];
-};
+}
 
+export interface IUpdateIncidentStatusResponse {
+  incident: {
+    id: string;
+    status: TIncidentStatusDTO;
+    // можно не перечислять всё — но лучше типизировать через общий Incident DTO если он есть
+  };
+}
 
-
+export interface IUpdateIncidentPriorityResponse {
+  incident: {
+    id: string;
+    priority: TIncidentPriorityDTO;
+  };
+}
 
 // ----------------------------------------
 //Request
 
-export type TIncidentsRequest = {
+export interface IIncidentsRequest {
   query?: string;
   status?: TIncidentStatusDTO;
   priority?: TIncidentPriorityDTO;
-  sort?: TPrioritySortDTO;
+  sort?: TIncidentSortDTO;
   page?: string;
   limit?: string;
-};
+}

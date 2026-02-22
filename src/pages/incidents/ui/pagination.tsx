@@ -1,9 +1,9 @@
-import type { TIncidentsListResponse } from '@/shared/api/types/server.types';
+import type { IIncidentsListResponse } from '@/shared/api/types/server.types';
 
 import cls from './pagination.module.scss';
 
 interface IPaginationProps {
-  data: TIncidentsListResponse;
+  data: IIncidentsListResponse;
   onNextPagination: () => void;
   onPrevPagination: () => void;
 }

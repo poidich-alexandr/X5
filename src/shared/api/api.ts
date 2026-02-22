@@ -1,18 +1,21 @@
 import { apiInstance as axios } from './api-instance';
 import type {
-  TIncidentDetailsResponse,
-  TIncidentsListResponse,
-  TIncidentsRequest,
+  IIncidentDetailsResponse,
+  IIncidentsListResponse,
+  IIncidentsRequest,
+  IUpdateIncidentPriorityResponse,
+  IUpdateIncidentStatusResponse,
+  TIncidentPriorityDTO,
   TIncidentStatusDTO,
 } from './types/server.types';
 
 export const getIncidents = async (
-  params: TIncidentsRequest,
+  params: IIncidentsRequest,
   options?: {
     signal?: AbortSignal;
   }
-): Promise<TIncidentsListResponse> => {
-  const { data } = await axios.get<TIncidentsListResponse>('incidents', {
+): Promise<IIncidentsListResponse> => {
+  const { data } = await axios.get<IIncidentsListResponse>('/incidents', {
     params,
     signal: options?.signal,
   });
@@ -24,21 +27,41 @@ export const getIncidentDetails = async (
   options?: {
     signal?: AbortSignal;
   }
-): Promise<TIncidentDetailsResponse> => {
-  const { data } = await axios.get<TIncidentDetailsResponse>(`/incidents/${incidentId}`, {
+): Promise<IIncidentDetailsResponse> => {
+  const { data } = await axios.get<IIncidentDetailsResponse>(`/incidents/${incidentId}`, {
     signal: options?.signal,
   });
   return data;
 };
 
-// TODO добавить в хендлерах сервера запрос на update
 export const updateIncidentStatus = async (
   incidentId: string,
-  nextStatus: TIncidentStatusDTO,
-  options?: {
-    signal?: AbortSignal;
-  }
-): Promise<TIncidentStatusDTO> => {
-  const { data } = await axios.put<TIncidentStatusDTO>('');
+  payload: { status: TIncidentStatusDTO },
+  options?: { signal?: AbortSignal }
+): Promise<IUpdateIncidentStatusResponse> => {
+  const { data } = await axios.patch<IUpdateIncidentStatusResponse>(
+    `/incidents/${incidentId}`,
+    payload,
+    {
+      signal: options?.signal,
+    }
+  );
+
+  return data;
+};
+
+export const updateIncidentPriority = async (
+  incidentId: string,
+  payload: { priority: TIncidentPriorityDTO },
+  options?: { signal?: AbortSignal }
+): Promise<IUpdateIncidentPriorityResponse> => {
+  const { data } = await axios.patch<IUpdateIncidentPriorityResponse>(
+    `/incidents/${incidentId}`,
+    payload,
+    {
+      signal: options?.signal,
+    }
+  );
+
   return data;
 };

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 
 import { api } from '@/shared/api';
-import type { TIncidentsListResponse } from '@/shared/api/types/server.types';
+import type { IIncidentsListResponse } from '@/shared/api/types/server.types';
 import { useQueryParams } from '@/shared/hooks/use-query-params';
 import { Dropdown } from '@/shared/ui/dropdown/dropdown';
 import { debounce } from '@/shared/utils/debounce';
@@ -35,7 +35,7 @@ export const IncidentsPage = () => {
     limit,
   };
 
-  const { data, isLoading, isError } = useQuery<TIncidentsListResponse | undefined>({
+  const { data, isLoading, isError } = useQuery<IIncidentsListResponse | undefined>({
     queryKey: ['incidents', incidentsQueryParameters],
     queryFn: ({ signal }) => api.getIncidents(incidentsQueryParameters, { signal }),
   });
