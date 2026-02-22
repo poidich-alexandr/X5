@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useParams } from 'react-router';
 
 import { api } from '@/shared/api';
@@ -14,6 +15,8 @@ export const IncidentDetailsPage = () => {
   const params = useParams();
   const incidentId = params.id as string;
 
+  const [noteText, setNoteText] = useState('');
+
   const incidentDetailsQueryKey = ['incident', incidentId] as const;
 
   const { data, isLoading, isError, error } = useQuery<IIncidentDetailsResponse>({
@@ -22,7 +25,12 @@ export const IncidentDetailsPage = () => {
     enabled: Boolean(incidentId),
   });
 
-  const { updatePriorityMutation, updateStatusMutation } = useDetailsMutation({ incidentId });
+  const { updatePriorityMutation, updateStatusMutation, addNoteMutation } = useDetailsMutation({
+    incidentId,
+    onAddNoteSuccess: () => {
+      setNoteText('');
+    },
+  });
 
   if (isError) {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
@@ -43,6 +51,15 @@ export const IncidentDetailsPage = () => {
     updatePriorityMutation.mutate(value);
   };
 
+  const handleAddNoteSubmit: React.SubmitEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+
+    const trimmedNoteText = noteText.trim();
+    if (trimmedNoteText.length === 0) {
+      return;
+    }
+    addNoteMutation.mutate(trimmedNoteText);
+  };
   return (
     <div>
       <h1>{data.incident.title}</h1>
@@ -85,6 +102,26 @@ export const IncidentDetailsPage = () => {
       ) : (
         <div>No notes</div>
       )}
+
+      <form onSubmit={handleAddNoteSubmit}>
+        <label>
+          <span>Add note</span>
+          <textarea
+            aria-label="Add note"
+            value={noteText}
+            onChange={(event) => setNoteText(event.target.value)}
+            rows={3}
+            placeholder="Write a short note…"
+            disabled={addNoteMutation.isPending}
+          />
+        </label>
+
+        <button type="submit" disabled={addNoteMutation.isPending || noteText.trim().length === 0}>
+          Add
+        </button>
+
+        {addNoteMutation.isError && <div>Failed to add note</div>}
+      </form>
     </div>
   );
 };

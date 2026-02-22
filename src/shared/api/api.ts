@@ -1,5 +1,6 @@
 import { apiInstance as axios } from './api-instance';
 import type {
+  IAddNoteResponse,
   IIncidentDetailsResponse,
   IIncidentsListResponse,
   IIncidentsRequest,
@@ -62,6 +63,18 @@ export const updateIncidentPriority = async (
       signal: options?.signal,
     }
   );
+
+  return data;
+};
+
+export const addIncidentNote = async (
+  incidentId: string,
+  payload: { message: string },
+  options?: { signal?: AbortSignal }
+): Promise<IAddNoteResponse> => {
+  const { data } = await axios.post<IAddNoteResponse>(`/incidents/${incidentId}/notes`, payload, {
+    signal: options?.signal,
+  });
 
   return data;
 };

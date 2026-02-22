@@ -41,6 +41,14 @@ export interface IUpdateIncidentPriorityResponse {
   };
 }
 
+export interface IAddNoteResponse {
+  note: {
+    id: string;
+    message: string;
+    createdAt: string;
+  };
+}
+
 // ----------------------------------------
 //Request
 
