@@ -5,13 +5,23 @@ export type TIncidentSortDTO = 'newest' | 'oldest';
 // ----------------------------------------
 //Response
 
-export interface IIncidentsListResponse {
-  items: { id: string; title: string }[];
+export type IIncidentListItemDTO = {
+  id: string;
+  title: string;
+  description: string;
+  status: TIncidentStatusDTO;
+  priority: TIncidentPriorityDTO;
+  createdAt: string;
+  reporter: string;
+};
+
+export type IIncidentsListResponse = {
+  items: IIncidentListItemDTO[];
   page: number;
   limit: number;
   totalItems: number;
   totalPages: number;
-}
+};
 
 export interface IIncidentDetailsResponse {
   incident: {

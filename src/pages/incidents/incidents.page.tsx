@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 
+import { getStatusLabel } from '@/pages/incidents/model/helpers/get-status-label';
 import { api } from '@/shared/api';
 import type { IIncidentsListResponse } from '@/shared/api/types/server.types';
 import { useQueryParams } from '@/shared/hooks/use-query-params';
@@ -10,8 +11,8 @@ import { debounce } from '@/shared/utils/debounce';
 import { getInitialDropdownOption } from '@/shared/utils/get-initial-dropdown-options';
 import { parsePositiveInteger } from '@/shared/utils/parse-positive-integer';
 
-import { priorityOptions, sortOptions, statusOptions } from './model/consts/incidents.consts';
 import cls from './incidents.page.module.scss';
+import { priorityOptions, sortOptions, statusOptions } from './model/consts/incidents.consts';
 import { isPriorityType, isSortType, isStatusType } from './model/guards';
 import { Pagination } from './ui/pagination';
 
@@ -103,10 +104,12 @@ export const IncidentsPage = () => {
     setQueryInputValue(queryFromUrl);
   }, [params.query]);
 
+  const startIndex = data ? (data.page - 1) * data.limit + 1 : 0;
+  const endIndex = data ? (data.page - 1) * data.limit + data.items.length : 0;
+
   if (isError) {
     return <div>Failed to load incidents</div>;
   }
-
   return (
     <div className={cls.page}>
       <h1 className={cls.title}>Incidents</h1>
@@ -136,7 +139,6 @@ export const IncidentsPage = () => {
           <span className={cls.label}>Priority</span>
           <Dropdown
             items={priorityOptions}
-            // initialOption={priorityOptions[0]}
             initialOption={getInitialDropdownOption(priorityOptions, params.priority)}
             ariaLabel="priority dropdown trigger"
             onChange={(option) => handlePriorityChange(option.value)}
@@ -154,6 +156,21 @@ export const IncidentsPage = () => {
         </label>
       </div>
 
+      {!isLoading && data && (
+        <div className={cls.resultsBar}>
+          <div className={cls.resultsText}>
+            Showing <b>{startIndex}</b>–<b>{endIndex}</b> of <b>{data.totalItems}</b>
+          </div>
+
+          <div className={cls.resultsChips}>
+            {status ? <span className={cls.chip}>Status: {status}</span> : null}
+            {priority ? <span className={cls.chip}>Priority: {priority}</span> : null}
+            {query ? <span className={cls.chip}>Search: “{query}”</span> : null}
+            <span className={cls.chip}>Sort: {sort}</span>
+          </div>
+        </div>
+      )}
+
       <div className={cls.content}>
         {isLoading || !data ? (
           <div className={cls.state}>Loading…</div>
@@ -163,8 +180,28 @@ export const IncidentsPage = () => {
           <ul className={cls.list}>
             {data.items.map((incident) => (
               <li className={cls.listItem} key={incident.id}>
-                <Link className={cls.link} to={`/incidents/${incident.id}`}>
-                  {incident.title}
+                <Link className={cls.row} to={`/incidents/${incident.id}`}>
+                  <div className={cls.rowMain}>
+                    <div className={cls.rowTitle}>{incident.title}</div>
+                    <div className={cls.rowPreview}>{incident.description}</div>
+
+                    <div className={cls.rowMeta}>
+                      <span className={cls.metaPill}>ID: {incident.id}</span>
+                      <span className={cls.metaPill}>Reporter: {incident.reporter}</span>
+                      <span className={cls.metaPill}>
+                        {new Date(incident.createdAt).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className={cls.rowSide}>
+                    <span className={cls.badge} data-variant={incident.status}>
+                      {getStatusLabel(incident.status)}
+                    </span>
+                    <span className={cls.badge} data-variant={incident.priority}>
+                      {incident.priority}
+                    </span>
+                  </div>
                 </Link>
               </li>
             ))}
