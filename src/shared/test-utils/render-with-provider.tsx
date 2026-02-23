@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
-import { createMemoryRouter, type RouteObject,RouterProvider } from 'react-router';
+import { HelmetProvider } from 'react-helmet-async';
+import { createMemoryRouter, type RouteObject, RouterProvider } from 'react-router';
 
 type TOptions = {
   entryRoute?: string;
@@ -18,16 +19,17 @@ export const renderWithProviders = (options: TOptions) => {
     },
   });
 
-  const memoryRouter = createMemoryRouter(routes , {
+  const memoryRouter = createMemoryRouter(routes, {
     initialEntries: [entryRoute],
   });
 
   const renderResult = render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={memoryRouter} />
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={memoryRouter} />
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 
   return { ...renderResult, queryClient, memoryRouter };
 };
-
