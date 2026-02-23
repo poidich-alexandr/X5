@@ -13,8 +13,8 @@ import { isIncidentPriorityDTO, isIncidentStatusDTO } from './model/guards';
 import { useDetailsMutation } from './model/useDetailsMutation';
 
 export const IncidentDetailsPage = () => {
-  const params = useParams();
-  const incidentId = params.id as string;
+  const { id: paramId } = useParams();
+  const incidentId = paramId ?? '';
 
   const [noteText, setNoteText] = useState('');
 
@@ -22,7 +22,7 @@ export const IncidentDetailsPage = () => {
 
   const { data, isLoading, isError, error } = useQuery<IIncidentDetailsResponse>({
     queryKey: incidentDetailsQueryKey,
-    queryFn: ({ signal }) => api.getIncidentDetails(incidentId!, { signal }),
+    queryFn: ({ signal }) => api.getIncidentDetails(incidentId, { signal }),
     enabled: Boolean(incidentId),
   });
 
@@ -32,15 +32,6 @@ export const IncidentDetailsPage = () => {
       setNoteText('');
     },
   });
-
-  if (isError) {
-    if (error instanceof Error && error.message === 'NOT_FOUND') {
-      return <div>Not found</div>;
-    }
-    return <div>Something went wrong</div>;
-  }
-
-  if (isLoading || !data) return <div>Loading details…</div>;
 
   const handleStatusChange = (value: string) => {
     if (!isIncidentStatusDTO(value)) return;
@@ -61,6 +52,21 @@ export const IncidentDetailsPage = () => {
     }
     addNoteMutation.mutate(trimmedNoteText);
   };
+
+  const isNotFound = isError && error instanceof Error && error.message === 'NOT_FOUND';
+
+  // if (!paramId) return <div>Not found</div>;
+  // if (isNotFound) return <div>Not found</div>;
+  // if (isError) return <div>Something went wrong</div>;
+  // if (isLoading) return <div>Loading details…</div>;
+  // if (!data) return <div>Loading details…</div>;
+
+  if (!paramId) return <div>Not found</div>;
+  if (isNotFound) return <div>Not found</div>;
+  if (isError) return <div>Something went wrong</div>;
+  if (isLoading) return <div>Loading details…</div>;
+  if (!data) return <div>Something went wrong</div>;
+
   return (
     <div className={cls.page}>
       <Link className={cls.backLink} to="/incidents">

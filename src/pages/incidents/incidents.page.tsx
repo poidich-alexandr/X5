@@ -111,117 +111,119 @@ export const IncidentsPage = () => {
     return <div>Failed to load incidents</div>;
   }
   return (
-    <div className={cls.page}>
-      <h1 className={cls.title}>Incidents</h1>
+    <>
+      <div className={cls.page}>
+        <h1 className={cls.title}>Incidents</h1>
 
-      <div className={cls.toolbar}>
-        <label className={cls.field}>
-          <span className={cls.label}>Search</span>
-          <input
-            className={cls.input}
-            value={queryInputValue}
-            onChange={(event) => handleQueryChange(event.target.value)}
-            placeholder="Search by title/description/id"
-          />
-        </label>
+        <div className={cls.toolbar}>
+          <label className={cls.field}>
+            <span className={cls.label}>Search</span>
+            <input
+              className={cls.input}
+              value={queryInputValue}
+              onChange={(event) => handleQueryChange(event.target.value)}
+              placeholder="Search by title/description/id"
+            />
+          </label>
 
-        <label className={cls.field}>
-          <span className={cls.label}>Status</span>
-          <Dropdown
-            items={statusOptions}
-            initialOption={getInitialDropdownOption(statusOptions, params.status)}
-            ariaLabel="status dropdown trigger"
-            onChange={(option) => handleStatusChange(option.value)}
-          />
-        </label>
+          <label className={cls.field}>
+            <span className={cls.label}>Status</span>
+            <Dropdown
+              items={statusOptions}
+              initialOption={getInitialDropdownOption(statusOptions, params.status)}
+              ariaLabel="status dropdown trigger"
+              onChange={(option) => handleStatusChange(option.value)}
+            />
+          </label>
 
-        <label className={cls.field}>
-          <span className={cls.label}>Priority</span>
-          <Dropdown
-            items={priorityOptions}
-            initialOption={getInitialDropdownOption(priorityOptions, params.priority)}
-            ariaLabel="priority dropdown trigger"
-            onChange={(option) => handlePriorityChange(option.value)}
-          />
-        </label>
+          <label className={cls.field}>
+            <span className={cls.label}>Priority</span>
+            <Dropdown
+              items={priorityOptions}
+              initialOption={getInitialDropdownOption(priorityOptions, params.priority)}
+              ariaLabel="priority dropdown trigger"
+              onChange={(option) => handlePriorityChange(option.value)}
+            />
+          </label>
 
-        <label className={cls.field}>
-          <span className={cls.label}>Sort</span>
-          <Dropdown
-            items={sortOptions}
-            initialOption={getInitialDropdownOption(sortOptions, params.sort)}
-            ariaLabel="sort dropdown trigger"
-            onChange={(option) => handleSortChange(option.value)}
-          />
-        </label>
-      </div>
-
-      {!isLoading && data && (
-        <div className={cls.resultsBar}>
-          <div className={cls.resultsText}>
-            Showing <b>{startIndex}</b>–<b>{endIndex}</b> of <b>{data.totalItems}</b>
-          </div>
-
-          <div className={cls.resultsChips}>
-            {status ? <span className={cls.chip}>Status: {status}</span> : null}
-            {priority ? <span className={cls.chip}>Priority: {priority}</span> : null}
-            {query ? <span className={cls.chip}>Search: “{query}”</span> : null}
-            <span className={cls.chip}>Sort: {sort}</span>
-          </div>
+          <label className={cls.field}>
+            <span className={cls.label}>Sort</span>
+            <Dropdown
+              items={sortOptions}
+              initialOption={getInitialDropdownOption(sortOptions, params.sort)}
+              ariaLabel="sort dropdown trigger"
+              onChange={(option) => handleSortChange(option.value)}
+            />
+          </label>
         </div>
-      )}
 
-      <div className={cls.content}>
-        {isLoading || !data ? (
-          <div className={cls.state}>Loading…</div>
-        ) : data.items.length === 0 ? (
-          <div className={cls.state}>No incidents found</div>
-        ) : (
-          <ul className={cls.list}>
-            {data.items.map((incident) => (
-              <li className={cls.listItem} key={incident.id}>
-                <Link
-                  className={cls.row}
-                  to={`/incidents/${incident.id}`}
-                  aria-label={`Open incident ${incident.id}`}
-                >
-                  <div className={cls.rowMain}>
-                    <div className={cls.rowTitle}>{incident.title}</div>
-                    <div className={cls.rowPreview}>{incident.description}</div>
+        {!isLoading && data && (
+          <div className={cls.resultsBar}>
+            <div className={cls.resultsText}>
+              Showing <b>{startIndex}</b>–<b>{endIndex}</b> of <b>{data.totalItems}</b>
+            </div>
 
-                    <div className={cls.rowMeta}>
-                      <span className={cls.metaPill}>ID: {incident.id}</span>
-                      <span className={cls.metaPill}>Reporter: {incident.reporter}</span>
-                      <span className={cls.metaPill}>
-                        {new Date(incident.createdAt).toLocaleString()}
+            <div className={cls.resultsChips}>
+              {status ? <span className={cls.chip}>Status: {status}</span> : null}
+              {priority ? <span className={cls.chip}>Priority: {priority}</span> : null}
+              {query ? <span className={cls.chip}>Search: “{query}”</span> : null}
+              <span className={cls.chip}>Sort: {sort}</span>
+            </div>
+          </div>
+        )}
+
+        <div className={cls.content}>
+          {isLoading || !data ? (
+            <div className={cls.state}>Loading…</div>
+          ) : data.items.length === 0 ? (
+            <div className={cls.state}>No incidents found</div>
+          ) : (
+            <ul className={cls.list}>
+              {data.items.map((incident) => (
+                <li className={cls.listItem} key={incident.id}>
+                  <Link
+                    className={cls.row}
+                    to={`/incidents/${incident.id}`}
+                    aria-label={`Open incident ${incident.id}`}
+                  >
+                    <div className={cls.rowMain}>
+                      <div className={cls.rowTitle}>{incident.title}</div>
+                      <div className={cls.rowPreview}>{incident.description}</div>
+
+                      <div className={cls.rowMeta}>
+                        <span className={cls.metaPill}>ID: {incident.id}</span>
+                        <span className={cls.metaPill}>Reporter: {incident.reporter}</span>
+                        <span className={cls.metaPill}>
+                          {new Date(incident.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={cls.rowSide}>
+                      <span className={cls.badge} data-variant={incident.status}>
+                        {getStatusLabel(incident.status)}
+                      </span>
+                      <span className={cls.badge} data-variant={incident.priority}>
+                        {incident.priority}
                       </span>
                     </div>
-                  </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
-                  <div className={cls.rowSide}>
-                    <span className={cls.badge} data-variant={incident.status}>
-                      {getStatusLabel(incident.status)}
-                    </span>
-                    <span className={cls.badge} data-variant={incident.priority}>
-                      {incident.priority}
-                    </span>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
+        {!isLoading && data && data.totalPages > 1 && (
+          <div className={cls.footer}>
+            <Pagination
+              data={data}
+              onPrevPagination={handlePrevPagination}
+              onNextPagination={handleNextPagination}
+            />
+          </div>
         )}
       </div>
-
-      {!isLoading && data && data.totalPages > 1 && (
-        <div className={cls.footer}>
-          <Pagination
-            data={data}
-            onPrevPagination={handlePrevPagination}
-            onNextPagination={handleNextPagination}
-          />
-        </div>
-      )}
-    </div>
+    </>
   );
 };

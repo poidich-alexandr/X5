@@ -1,3 +1,5 @@
+import { isAxiosError } from 'axios';
+
 import { apiInstance as axios } from './api-instance';
 import type {
   IAddNoteResponse,
@@ -25,16 +27,24 @@ export const getIncidents = async (
 
 export const getIncidentDetails = async (
   incidentId: string,
-  options?: {
-    signal?: AbortSignal;
-  }
+  options?: { signal?: AbortSignal }
 ): Promise<IIncidentDetailsResponse> => {
-  const { data } = await axios.get<IIncidentDetailsResponse>(`/incidents/${incidentId}`, {
-    signal: options?.signal,
-  });
-  return data;
-};
+  try {
+    const { data } = await axios.get<IIncidentDetailsResponse>(`/incidents/${incidentId}`, {
+      signal: options?.signal,
+    });
 
+    return data;
+  } catch (caughtError: unknown) {
+    if (isAxiosError(caughtError)) {
+      if (caughtError.response?.status === 404) {
+        throw new Error('NOT_FOUND');
+      }
+    }
+
+    throw caughtError;
+  }
+};
 export const updateIncidentStatus = async (
   incidentId: string,
   payload: { status: TIncidentStatusDTO },
