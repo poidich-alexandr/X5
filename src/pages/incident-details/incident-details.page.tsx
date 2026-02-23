@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 
 import { api } from '@/shared/api';
 import type { IIncidentDetailsResponse } from '@/shared/api/types/server.types';
 import { Dropdown } from '@/shared/ui/dropdown/dropdown';
 import { getInitialDropdownOption } from '@/shared/utils/get-initial-dropdown-options';
 
+import cls from './incident-details.page.module.scss';
 import { priorityDetailOptions, statusDetailOptions } from './model/consts/incidents.consts';
 import { isIncidentPriorityDTO, isIncidentStatusDTO } from './model/guards';
 import { useDetailsMutation } from './model/useDetailsMutation';
@@ -61,67 +62,151 @@ export const IncidentDetailsPage = () => {
     addNoteMutation.mutate(trimmedNoteText);
   };
   return (
-    <div>
-      <h1>{data.incident.title}</h1>
-      <p>{data.incident.description}</p>
+    <div className={cls.page}>
+      <Link className={cls.backLink} to="/incidents">
+        ← Back to incidents
+      </Link>
+      <div className={cls.shell}>
+        <div className={cls.head}>
+          <h1 className={cls.title}>{data.incident.title}</h1>
 
-      <div>
-        <div>
-          <span>Status:</span>{' '}
-          <Dropdown
-            key={data.incident.status} //чтобы rollback/optimistic всегда отражался в UI
-            items={statusDetailOptions}
-            initialOption={getInitialDropdownOption(statusDetailOptions, data.incident.status)}
-            ariaLabel="status dropdown trigger"
-            isDisabled={updateStatusMutation.isPending}
-            onChange={(option) => handleStatusChange(option.value)}
-          />
+          <div className={cls.meta}>
+            <div className={cls.metaItem}>
+              <span className={cls.metaKey}>ID</span>
+              <span className={cls.metaValue}>{data.incident.id}</span>
+            </div>
+            <div className={cls.metaItem}>
+              <span className={cls.metaKey}>Reporter</span>
+              <span className={cls.metaValue}>{data.incident.reporter}</span>
+            </div>
+            <div className={cls.metaItem}>
+              <span className={cls.metaKey}>Created</span>
+              <span className={cls.metaValue}>
+                {new Date(data.incident.createdAt).toLocaleString()}
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <span>Priority:</span>{' '}
-          <Dropdown
-            key={data.incident.priority}
-            items={priorityDetailOptions}
-            initialOption={getInitialDropdownOption(priorityDetailOptions, data.incident.priority)}
-            ariaLabel="priority dropdown trigger"
-            isDisabled={updatePriorityMutation.isPending}
-            onChange={(option) => handlePriorityChange(option.value)}
-          />
+        <div className={cls.layout}>
+          <main className={cls.main}>
+            <section className={cls.card}>
+              <h2 className={cls.sectionTitle}>Description</h2>
+              <p className={cls.description}>{data.incident.description}</p>
+            </section>
+
+            <section className={cls.card}>
+              <div className={cls.sectionHeader}>
+                <h2 className={cls.sectionTitle}>Notes</h2>
+                <span className={cls.sectionHint}>
+                  {data.notes.length ? `${data.notes.length} total` : 'No notes yet'}
+                </span>
+              </div>
+
+              {data.notes.length ? (
+                <ul className={cls.notesList}>
+                  {data.notes.map((note) => (
+                    <li className={cls.note} key={note.id}>
+                      <div className={cls.noteMessage}>{note.message}</div>
+                      <div className={cls.noteMeta}>
+                        {new Date(note.createdAt).toLocaleString()}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className={cls.empty}>No notes</div>
+              )}
+
+              <form className={cls.form} onSubmit={handleAddNoteSubmit}>
+                <label className={cls.field}>
+                  <span className={cls.label}>Add note</span>
+                  <textarea
+                    className={cls.textarea}
+                    aria-label="Add note"
+                    value={noteText}
+                    onChange={(event) => setNoteText(event.target.value)}
+                    rows={4}
+                    placeholder="Write a short note for operators…"
+                    disabled={addNoteMutation.isPending}
+                  />
+                </label>
+
+                <div className={cls.actions}>
+                  <button
+                    className={cls.button}
+                    type="submit"
+                    disabled={addNoteMutation.isPending || noteText.trim().length === 0}
+                  >
+                    Add note
+                  </button>
+
+                  {addNoteMutation.isError && (
+                    <div className={cls.inlineError}>Failed to add note</div>
+                  )}
+                </div>
+              </form>
+            </section>
+          </main>
+
+          <aside className={cls.aside}>
+            <div className={cls.triageCard}>
+              <div className={cls.triageHeader}>
+                <h2 className={cls.sectionTitle}>Triage</h2>
+                <div className={cls.triageSub}>Set current status and priority</div>
+              </div>
+
+              <div className={cls.triageGrid}>
+                <div className={cls.field}>
+                  <span className={cls.label}>Status</span>
+                  <div className={cls.control}>
+                    <Dropdown
+                      key={data.incident.status}
+                      items={statusDetailOptions}
+                      initialOption={getInitialDropdownOption(
+                        statusDetailOptions,
+                        data.incident.status
+                      )}
+                      ariaLabel="status dropdown trigger"
+                      isDisabled={updateStatusMutation.isPending}
+                      onChange={(option) => handleStatusChange(option.value)}
+                    />
+                  </div>
+                  {updateStatusMutation.isError && (
+                    <div className={cls.inlineError}>Failed to update status</div>
+                  )}
+                </div>
+
+                <div className={cls.field}>
+                  <span className={cls.label}>Priority</span>
+                  <div className={cls.control}>
+                    <Dropdown
+                      key={data.incident.priority}
+                      items={priorityDetailOptions}
+                      initialOption={getInitialDropdownOption(
+                        priorityDetailOptions,
+                        data.incident.priority
+                      )}
+                      ariaLabel="priority dropdown trigger"
+                      isDisabled={updatePriorityMutation.isPending}
+                      onChange={(option) => handlePriorityChange(option.value)}
+                    />
+                  </div>
+                  {updatePriorityMutation.isError && (
+                    <div className={cls.inlineError}>Failed to update priority</div>
+                  )}
+                </div>
+              </div>
+
+              <div className={cls.triageFooter}>
+                <div className={cls.hint}>
+                  Changes are saved automatically. If network fails, we rollback.
+                </div>
+              </div>
+            </div>
+          </aside>
         </div>
-        <div>Reporter: {data.incident.reporter}</div>
       </div>
-
-      <h2>Notes</h2>
-      {data.notes.length ? (
-        <ul>
-          {data.notes.map((note) => (
-            <li key={note.id}>{note.message}</li>
-          ))}
-        </ul>
-      ) : (
-        <div>No notes</div>
-      )}
-
-      <form onSubmit={handleAddNoteSubmit}>
-        <label>
-          <span>Add note</span>
-          <textarea
-            aria-label="Add note"
-            value={noteText}
-            onChange={(event) => setNoteText(event.target.value)}
-            rows={3}
-            placeholder="Write a short note…"
-            disabled={addNoteMutation.isPending}
-          />
-        </label>
-
-        <button type="submit" disabled={addNoteMutation.isPending || noteText.trim().length === 0}>
-          Add
-        </button>
-
-        {addNoteMutation.isError && <div>Failed to add note</div>}
-      </form>
     </div>
   );
 };

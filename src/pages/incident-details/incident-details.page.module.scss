@@ -1,0 +1,280 @@
+.page {
+  min-height: 100vh;
+  background: #f6f7f9;
+  color: #0f172a;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #0f172a;
+  text-decoration: none;
+
+  opacity: 0.85;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.2);
+    outline-offset: 4px;
+    border-radius: 10px;
+  }
+}
+
+.shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px;
+}
+
+.head {
+  padding: 18px;
+  border: 1px solid #e6e8ee;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.meta {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.metaItem {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  border: 1px solid #e6e8ee;
+}
+
+.metaKey {
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.metaValue {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.layout {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 920px) {
+  .layout {
+    grid-template-columns: 1fr 320px;
+    align-items: start;
+  }
+}
+
+.main {
+  display: grid;
+  gap: 14px;
+}
+
+.aside {
+  @media (min-width: 920px) {
+    position: sticky;
+    top: 72px; // высота хедера + небольшой отступ
+    align-self: start;
+  }
+}
+
+.triageCard {
+  border: 1px solid #e6e8ee;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+  padding: 14px;
+}
+
+.card {
+  border: 1px solid #e6e8ee;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+  padding: 14px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.sectionHint {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.description {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #0f172a;
+}
+
+.triageHeader {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.triageSub {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.triageGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  color: #475569;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+}
+
+.notesList {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: grid;
+  gap: 10px;
+}
+
+.note {
+  padding: 12px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e6e8ee;
+}
+
+.noteMessage {
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.noteMeta {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.empty {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.form {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #eef0f5;
+  display: grid;
+  gap: 10px;
+}
+
+.textarea {
+  width: 100%;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid #d6dae3;
+  background: #ffffff;
+  color: inherit;
+  outline: none;
+  resize: vertical;
+  min-height: 96px;
+}
+
+.textarea:focus {
+  border-color: #94a3b8;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.button {
+  border-radius: 12px;
+  padding: 10px 14px;
+  border: 1px solid #d6dae3;
+  background: #0f172a;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.inlineError {
+  font-size: 12px;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.triageFooter {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eef0f5;
+}
+
+.hint {
+  font-size: 12px;
+  color: #64748b;
+}
