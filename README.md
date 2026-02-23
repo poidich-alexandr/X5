@@ -1,73 +1,140 @@
-# React + TypeScript + Vite
+# Incident Inbox
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Test assignment implementation - Incident management interface for Driver Operations.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Tech Stack
 
-## React Compiler
+- React 18
+- TypeScript
+- React Router (Data Router API)
+- TanStack Query
+- MSW (Mock Service Worker)
+- Vitest + React Testing Library
+- SCSS Modules
+- Bun
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Incidents List (`/incidents`)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Server-side pagination
+- Search with debounce
+- Filtering by status and priority
+- Sorting (newest / oldest)
+- URL query params sync (Back/Forward supported)
+- Active filters summary bar
+- Accessible custom Dropdown component
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Incident Details (`/incidents/:id`)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Incident info view
+- Change status (optimistic update + rollback on error)
+- Change priority
+- Add notes
+- Global route-level error boundary
+
+---
+
+## Key Implementation Notes
+
+### Query Keys Strategy
+
+```ts
+['incidents', { query, status, priority, sort, page, limit }][('incident', id)];
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Changing any parameter automatically triggers refetch.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Optimistic Update (Status)
+
+- `onMutate` --> update cache immediately
+- `onError` --> rollback to previous state
+- `onSettled` --> invalidate details query
+
+---
+
+### URL Synchronization
+
+All filters, sorting, pagination and search are stored in query params.  
+Back/Forward navigation restores state correctly.
+
+---
+
+### MSW
+
+Used both:
+
+- in browser (development)
+- in node (tests)
+
+Handlers include:
+
+- `GET /api/incidents`
+- `GET /api/incidents/:id`
+- `PATCH /api/incidents/:id`
+- `POST /api/incidents/:id/notes`
+
+---
+
+## Tests
+
+Covered scenarios:
+
+- List rendering with loading → data transition (MSW-backed)
+- URL synchronization (pagination, filter reset, debounced search)
+- Navigation from list to details page
+- Add note mutation with UI update
+- Optimistic status update with rollback on error
+
+Run tests:
+
+```bash
+bun test
+```
+
+---
+
+## Run Locally
+
+Install dependencies:
+
+```bash
+bun install
+```
+
+Start dev server:
+
+```bash
+bun dev
+```
+
+Build:
+
+```bash
+bun run build
+```
+
+---
+
+## Project Structure (simplified)
+
+```
+src/
+  app/
+  mocks/
+  pages/
+    incidents/
+    incident-details/
+  shared/
+    api/
+    hooks/
+    ui/
+    utils/
+
 ```
