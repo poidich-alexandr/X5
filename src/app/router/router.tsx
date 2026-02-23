@@ -1,11 +1,14 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 
+import { GlobalErrorBoundary } from './global-error-boundary';
 import { RootLayout } from './root-layout';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     Component: RootLayout,
+    errorElement: <GlobalErrorBoundary />,
+    
     children: [
       {
         index: true,

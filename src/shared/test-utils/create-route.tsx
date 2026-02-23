@@ -1,12 +1,15 @@
 import { Navigate, type RouteObject } from 'react-router';
 
+import { GlobalErrorBoundary } from '@/app/router/global-error-boundary';
 import { RootLayout } from '@/app/router/root-layout';
 
-export function createTestRoutes(): RouteObject[] {
+export const createTestRoutes = (): RouteObject[] => {
   return [
     {
       path: '/',
       Component: RootLayout,
+      errorElement: <GlobalErrorBoundary />,
+      
       hydrateFallbackElement: <div>Loading…</div>,
       children: [
         {
@@ -30,5 +33,4 @@ export function createTestRoutes(): RouteObject[] {
       ],
     },
   ];
-}
-
+};
