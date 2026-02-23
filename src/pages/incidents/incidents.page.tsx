@@ -180,7 +180,11 @@ export const IncidentsPage = () => {
           <ul className={cls.list}>
             {data.items.map((incident) => (
               <li className={cls.listItem} key={incident.id}>
-                <Link className={cls.row} to={`/incidents/${incident.id}`}>
+                <Link
+                  className={cls.row}
+                  to={`/incidents/${incident.id}`}
+                  aria-label={`Open incident ${incident.id}`}
+                >
                   <div className={cls.rowMain}>
                     <div className={cls.rowTitle}>{incident.title}</div>
                     <div className={cls.rowPreview}>{incident.description}</div>

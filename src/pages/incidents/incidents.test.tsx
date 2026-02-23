@@ -1,7 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { createTestRoutes } from '@/shared/test-utils/create-route';
+import { createTestRoutes } from '@/shared/test-utils/create-test-routes';
 import { renderWithProviders } from '@/shared/test-utils/render-with-provider';
 
 import { IncidentsPage } from './incidents.page';
@@ -56,7 +56,7 @@ describe('IncidentsPage — URL sync', () => {
     expect(await screen.findByText('Incidents')).toBeInTheDocument();
 
     // Нахожу label "Status" и внутри statusTrigger
-    const statusLabel = screen.getByText('Status').closest('label');
+    const statusLabel = screen.getByText(/status/i).closest('label');
     expect(statusLabel).toBeTruthy();
 
     const statusTrigger = within(statusLabel as HTMLElement).getByRole('button', {
@@ -64,7 +64,10 @@ describe('IncidentsPage — URL sync', () => {
     });
     // клик по тригеру + клик по resolved-option
     await user.click(statusTrigger);
-    await user.click(screen.getByRole('button', { name: /resolved/i }));
+
+    const listbox = within(statusLabel!).getByRole('listbox');
+    const resolvedOption = within(listbox).getByRole('option', { name: /resolved/i });
+    await user.click(resolvedOption);
 
     // Проверяю что page сбросился + статус записался в URL
     expect(memoryRouter.state.location.search).toContain('page=1');

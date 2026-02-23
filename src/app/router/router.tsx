@@ -8,7 +8,7 @@ export const router = createBrowserRouter([
     path: '/',
     Component: RootLayout,
     errorElement: <GlobalErrorBoundary />,
-    
+
     children: [
       {
         index: true,
@@ -28,6 +28,10 @@ export const router = createBrowserRouter([
             Component: module.IncidentDetailsPage,
           })),
       },
+      {
+        path: "*",
+        element: <div>NOT FOUND</div>
+      }
     ],
   },
 ]);
