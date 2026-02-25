@@ -30,8 +30,8 @@ Object.defineProperty(window, 'matchMedia', {
       onchange: null,
       addEventListener: () => {},
       removeEventListener: () => {},
-      addListener: () => {}, // legacy
-      removeListener: () => {}, // legacy
+      addListener: () => {}, 
+      removeListener: () => {}, 
       dispatchEvent: () => false,
     };
   },

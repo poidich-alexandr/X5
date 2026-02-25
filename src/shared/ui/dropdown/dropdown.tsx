@@ -8,6 +8,7 @@ import cls from './dropdown.module.scss';
 import { useMaxDropDownHeight } from './helpers/use-max-dropdown-height';
 
 const DEFAULT_HEIGHT = 10;
+const MAX_AVAILABLE_SPACE_BOTTOM = 200;
 
 export interface IDropDownOption {
   text: string;
@@ -54,6 +55,7 @@ export const Dropdown = ({
   const dropdownId = useId();
 
   const maxDropDownHeight = useMaxDropDownHeight(isOpened, triggerRef);
+  const shouldReverseDropDirection = maxDropDownHeight < MAX_AVAILABLE_SPACE_BOTTOM;
 
   const selectedOptionIndex = useMemo(() => {
     const foundIndex = items.findIndex((option) => option.text === currentText);
@@ -194,6 +196,11 @@ export const Dropdown = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpened]);
 
+  // Синхронизирую текст, когда initialOption меняется снаружи
+  useEffect(() => {
+    setCurrentText(initialOption.text);
+  }, [initialOption.text]);
+
   const activeOptionId = `${dropdownId}-option-${activeOptionIndex}`;
 
   return (
@@ -218,7 +225,12 @@ export const Dropdown = ({
       </button>
 
       <div
-        className={clsx(cls.dropdown, isOpened && cls.dropdownOpen, clsDropdown)}
+        className={clsx(
+          cls.dropdown,
+          shouldReverseDropDirection && cls.dropup,
+          isOpened && cls.dropdownOpen,
+          clsDropdown
+        )}
         style={{ maxHeight: `${maxDropDownHeight ?? DEFAULT_HEIGHT}px` }}
       >
         <ul

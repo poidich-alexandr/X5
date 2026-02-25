@@ -100,6 +100,50 @@ bun test
 
 ---
 
+## Development Debug Parameters
+
+For development purposes, additional query parameters can be used to simulate network behavior via MSW.
+
+These parameters can be added directly to the browser URL:
+
+```
+?slow=1
+?fail=1
+```
+
+---
+
+### `?slow=1`
+
+Simulates a slow network response (~6000ms delay).
+
+Examples:
+
+```
+/incidents?slow=1
+/incidents/INC-1003?slow=1
+```
+
+---
+
+### `?fail=1`
+
+Forces the API request to return `500 Internal Server Error`.
+
+Examples:
+
+```
+/incidents?fail=1
+/incidents/INC-1003?fail=1
+```
+
+---
+
+These parameters are automatically forwarded to API requests in development and handled by MSW.  
+They are intended strictly for debugging and are not part of the production API contract.
+
+---
+
 ## Run Locally
 
 Install dependencies:

@@ -5,8 +5,8 @@ import { useAdaptive } from '../../../hooks/use-adaptive';
 export const useMaxDropDownHeight = (
   isOpened: boolean,
   triggerButtonRef: React.RefObject<HTMLButtonElement | null>
-): number | null => {
-  const [maxMenuHeight, setMaxMenuHeight] = useState<number | null>(null);
+) => {
+  const [maxMenuHeight, setMaxMenuHeight] = useState<number>(0);
 
   const isMobile = useAdaptive(750);
   const BOTTOM_DROPDOWN_OFFSET_PIXELS = isMobile ? 32 : 100;
@@ -34,7 +34,6 @@ export const useMaxDropDownHeight = (
       window.removeEventListener('resize', calculate);
       window.removeEventListener('scroll', calculate, true);
     };
-
   }, [isOpened, triggerButtonRef, BOTTOM_DROPDOWN_OFFSET_PIXELS]);
 
   return maxMenuHeight;

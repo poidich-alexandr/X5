@@ -1,6 +1,8 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { http, HttpResponse } from 'msw';
 
+import { server } from '@/mocks/server';
 import { createTestRoutes } from '@/shared/test-utils/create-test-routes';
 import { renderWithProviders } from '@/shared/test-utils/render-with-provider';
 
@@ -95,5 +97,48 @@ describe('IncidentsPage — URL sync', () => {
     const searchParams = new URLSearchParams(memoryRouter.state.location.search);
 
     expect(searchParams.get('page')).toBe('1');
+  });
+});
+
+describe('IncidentsPage — empty state', () => {
+  it('shows empty state when no incidents match filters', async () => {
+    const user = userEvent.setup();
+
+    renderWithProviders({
+      entryRoute: '/incidents',
+      routes: createTestRoutes(),
+    });
+
+    // Дождались загрузки
+    expect(await screen.findByText('Incidents')).toBeInTheDocument();
+
+    // Вводим заведомо несуществующий запрос
+    const searchInput = screen.getByPlaceholderText(/search by title/i);
+    await user.type(searchInput, 'zzzz-not-existing');
+
+    // Ждём debounce + перерендер
+    expect(await screen.findByText(/no incidents found/i)).toBeInTheDocument();
+  });
+});
+
+describe('IncidentsPage — error state', () => {
+  it('shows error state when API fails', async () => {
+    server.use(
+      http.get('/api/incidents', () => {
+        return HttpResponse.json(
+          { message: 'forced error' },
+          { status: 500 }
+        );
+      })
+    );
+
+    renderWithProviders({
+      entryRoute: '/incidents',
+      routes: createTestRoutes(),
+    });
+
+    expect(
+      await screen.findByText(/failed to load incidents/i)
+    ).toBeInTheDocument();
   });
 });

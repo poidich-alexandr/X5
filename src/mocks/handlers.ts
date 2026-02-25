@@ -23,7 +23,7 @@ const applyFailAndSlow = (url: URL): Promise<void> => {
   }
 
   if (shouldSlow) {
-    return delay(600);
+    return delay(6000);
   }
 
   return Promise.resolve();

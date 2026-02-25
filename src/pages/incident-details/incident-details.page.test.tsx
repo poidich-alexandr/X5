@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import { delay, http, HttpResponse } from 'msw';
 
 import { server } from '@/mocks/server';
 import { createTestRoutes } from '@/shared/test-utils/create-test-routes';
@@ -14,7 +14,7 @@ describe('routing', () => {
       routes: createTestRoutes(),
     });
 
-    const idPill = await screen.findByText(/ID:\s*INC-1001/i);
+    const idPill = await screen.findByText(/ID:\s*INC-1001/i, {}, { timeout: 5000 });
     const link = idPill.closest('a');
 
     expect(link).not.toBeNull();
@@ -57,7 +57,8 @@ describe('IncidentDetailsPage — optimistic status', () => {
 
     // PATCH падает
     server.use(
-      http.patch('/api/incidents/:id', () => {
+      http.patch('/api/incidents/:id', async () => {
+        await delay(80); // даю TSQuery время отработать onMutate --> mutate --> onError
         return HttpResponse.json({ message: 'forced fail' }, { status: 500 });
       })
     );
@@ -67,26 +68,29 @@ describe('IncidentDetailsPage — optimistic status', () => {
       routes: createTestRoutes(),
     });
 
-    expect(await screen.findByRole('heading', { name: /Wrong address/i })).toBeInTheDocument();
+    await screen.findByRole('heading', { name: /Wrong address/i });
+    await screen.findByText(/INC-1001/i);
 
     const statusTrigger = screen.getByRole('button', { name: /status dropdown trigger/i });
+    expect(statusTrigger).toHaveTextContent(/in progress/i); //исходный статус для INC-1001 'in progress'
 
-    // До изменения: исходный статус для INC-1001 'in progress'
-    expect(statusTrigger).toHaveTextContent(/in progress/i);
-
-    // Открываею dropdown и выбираю другой статус
+    // Открываею dropdown и выбираю другой статус ("resolved")
     await user.click(statusTrigger);
-
-    // Внутри Dropdown options имеет role="option"
     const resolvedOption = await screen.findByRole('option', { name: /resolved/i });
     await user.click(resolvedOption);
 
-    // Optimistic --> сразу стало resolved
+    // Optimistic update
     expect(statusTrigger).toHaveTextContent(/resolved/i);
 
-    // PATCH упал --> rollback --> вернулось на in progress
-    waitFor(() => {
-      expect(statusTrigger).toHaveTextContent(/in progress/i);
-    });
-  });
+    // ищу ошибку в UI, и rollback
+    await waitFor(
+      () => {
+        expect(screen.getByText(/Failed to update status/i)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /status dropdown trigger/i })).toHaveTextContent(
+          /in progress/i
+        );
+      },
+      { timeout: 6000, interval: 100 }
+    );
+  }, 15000);
 });

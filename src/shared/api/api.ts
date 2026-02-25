@@ -1,5 +1,6 @@
 import { isAxiosError } from 'axios';
 
+import { getDebugParamsFromPageUrl } from '../utils/get-debug-params';
 import { apiInstance as axios } from './api-instance';
 import type {
   IAddNoteResponse,
@@ -18,8 +19,10 @@ export const getIncidents = async (
     signal?: AbortSignal;
   }
 ): Promise<IIncidentsListResponse> => {
+  const debugParams = getDebugParamsFromPageUrl();
+
   const { data } = await axios.get<IIncidentsListResponse>('/incidents', {
-    params,
+    params: { ...params, ...debugParams },
     signal: options?.signal,
   });
   return data;
@@ -30,8 +33,10 @@ export const getIncidentDetails = async (
   options?: { signal?: AbortSignal }
 ): Promise<IIncidentDetailsResponse> => {
   try {
+    const debugParams = getDebugParamsFromPageUrl();
     const { data } = await axios.get<IIncidentDetailsResponse>(`/incidents/${incidentId}`, {
       signal: options?.signal,
+      params: debugParams,
     });
 
     return data;
@@ -45,6 +50,7 @@ export const getIncidentDetails = async (
     throw caughtError;
   }
 };
+
 export const updateIncidentStatus = async (
   incidentId: string,
   payload: { status: TIncidentStatusDTO },

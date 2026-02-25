@@ -110,6 +110,7 @@ export const IncidentsPage = () => {
   if (isError) {
     return <div>Failed to load incidents</div>;
   }
+  
   return (
     <>
       <div className={cls.page}>

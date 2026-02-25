@@ -10,13 +10,19 @@ import { getInitialDropdownOption } from '@/shared/utils/get-initial-dropdown-op
 import cls from './incident-details.page.module.scss';
 import { priorityDetailOptions, statusDetailOptions } from './model/consts/incidents.consts';
 import { isIncidentPriorityDTO, isIncidentStatusDTO } from './model/guards';
+import { useNoteDraftStorage } from './model/use-note-draft-storage';
 import { useDetailsMutation } from './model/useDetailsMutation';
 
 export const IncidentDetailsPage = () => {
   const { id: paramId } = useParams();
   const incidentId = paramId ?? '';
+  const noteStorageKey = `incident-note-draft-${incidentId}`;
 
-  const [noteText, setNoteText] = useState('');
+  const getInitialNote = () => {
+    if (!incidentId) return '';
+    return localStorage.getItem(noteStorageKey) ?? '';
+  };
+  const [noteText, setNoteText] = useState(() => getInitialNote());
 
   const incidentDetailsQueryKey = ['incident', incidentId] as const;
 
@@ -26,10 +32,12 @@ export const IncidentDetailsPage = () => {
     enabled: Boolean(incidentId),
   });
 
-  const { updatePriorityMutation, updateStatusMutation, addNoteMutation } = useDetailsMutation({
+  const { clearDraft } = useNoteDraftStorage({ incidentId, noteStorageKey, noteText });
+  const { updateStatusMutation, updatePriorityMutation, addNoteMutation } = useDetailsMutation({
     incidentId,
     onAddNoteSuccess: () => {
       setNoteText('');
+      clearDraft();
     },
   });
 
@@ -54,12 +62,6 @@ export const IncidentDetailsPage = () => {
   };
 
   const isNotFound = isError && error instanceof Error && error.message === 'NOT_FOUND';
-
-  // if (!paramId) return <div>Not found</div>;
-  // if (isNotFound) return <div>Not found</div>;
-  // if (isError) return <div>Something went wrong</div>;
-  // if (isLoading) return <div>Loading details…</div>;
-  // if (!data) return <div>Loading details…</div>;
 
   if (!paramId) return <div>Not found</div>;
   if (isNotFound) return <div>Not found</div>;
@@ -167,7 +169,7 @@ export const IncidentDetailsPage = () => {
                   <span className={cls.label}>Status</span>
                   <div className={cls.control}>
                     <Dropdown
-                      key={data.incident.status}
+                      clsRoot={cls.rootDropdown}
                       items={statusDetailOptions}
                       initialOption={getInitialDropdownOption(
                         statusDetailOptions,
@@ -187,7 +189,8 @@ export const IncidentDetailsPage = () => {
                   <span className={cls.label}>Priority</span>
                   <div className={cls.control}>
                     <Dropdown
-                      key={data.incident.priority}
+                      clsRoot={cls.rootDropdown}
+                      clsDropdown={cls.priorityDropdownList}
                       items={priorityDetailOptions}
                       initialOption={getInitialDropdownOption(
                         priorityDetailOptions,

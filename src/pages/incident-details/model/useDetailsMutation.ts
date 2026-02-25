@@ -49,7 +49,6 @@ export const useDetailsMutation = ({
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: incidentDetailsQueryKey });
-      // queryClient.invalidateQueries({ queryKey: ['incidents'] });
     },
   });
 

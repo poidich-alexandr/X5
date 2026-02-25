@@ -179,6 +179,15 @@
   align-items: center;
 }
 
+.rootDropdown {
+  max-width: 300px;
+  width: 100%;
+}
+
+.priorityDropdownList {
+  min-height: 135px;
+}
+
 .notesList {
   list-style: none;
   padding: 0;
