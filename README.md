@@ -104,6 +104,18 @@ bun run test
 
 ---
 
+## Linting
+
+The project uses ESLint for static code analysis.
+
+### Run linter
+
+```bash
+npm run eslint
+```
+
+---
+
 ## Development Debug Parameters
 
 For development purposes, additional query parameters can be used to simulate network behavior via MSW.
