@@ -6,7 +6,7 @@ Test assignment implementation - Incident management interface for Driver Operat
 
 ## 🚀 Tech Stack
 
-- React 18
+- React 19
 - TypeScript
 - React Router (Data Router API)
 - TanStack Query
@@ -35,6 +35,7 @@ Test assignment implementation - Incident management interface for Driver Operat
 - Change status (optimistic update + rollback on error)
 - Change priority
 - Add notes
+- Note is saved with debounce to LocalStorage and cleared after successful note submission
 - Global route-level error boundary
 
 ---
@@ -91,11 +92,14 @@ Covered scenarios:
 - Navigation from list to details page
 - Add note mutation with UI update
 - Optimistic status update with rollback on error
+- Empty state when no incidents match filters
+- Error state when API request fails
+- Unit tests for parsePositiveInteger utility
 
 Run tests:
 
 ```bash
-bun test
+bun run test
 ```
 
 ---
@@ -155,7 +159,7 @@ bun install
 Start dev server:
 
 ```bash
-bun dev
+bun run dev
 ```
 
 Build:
@@ -175,9 +179,12 @@ src/
   pages/
     incidents/
     incident-details/
+    not-found/
   shared/
     api/
     hooks/
+    lib/
+    tes-utils/
     ui/
     utils/
 
