@@ -8,6 +8,10 @@ import type { IIncidentDetailsResponse } from '@/shared/api/types/server.types';
 import { IncidentDetailsContext } from './use-incident-details-context';
 
 export const IncidentDetailsProvider = ({ children }: { children: ReactNode }) => {
+
+
+
+
   const { id: paramId } = useParams();
   const incidentId = paramId ?? '';
 
@@ -21,7 +25,7 @@ export const IncidentDetailsProvider = ({ children }: { children: ReactNode }) =
 
   return (
     <IncidentDetailsContext.Provider
-      value={{ incidentId, paramId, data, isLoading, isError, error }}
+      value={{ data, incidentId, paramId, isLoading, isError, error }}
     >
       {children}
     </IncidentDetailsContext.Provider>

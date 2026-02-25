@@ -7,6 +7,7 @@ import cls from './incident-details.page.module.scss';
 import { priorityDetailOptions, statusDetailOptions } from './model/consts/incidents.consts';
 import { isIncidentPriorityDTO, isIncidentStatusDTO } from './model/guards';
 import { IncidentDetailsProvider } from './model/incident-details-provider';
+import { useBack } from './model/use-back';
 import { useDetailsMutation } from './model/use-details-mutation';
 import { useIncidentDetailsContext } from './model/use-incident-details-context';
 import { useNote } from './model/use-note';
@@ -15,6 +16,7 @@ import { Note } from './ui/note/note';
 
 export const IncidentDetailsContent = () => {
   const { data, incidentId, paramId, isError, error, isLoading } = useIncidentDetailsContext();
+  const { backTo } = useBack();
 
   const { updateStatusMutation, updatePriorityMutation, addNoteMutation } = useDetailsMutation({
     incidentId,
@@ -49,7 +51,7 @@ export const IncidentDetailsContent = () => {
 
   return (
     <div className={cls.page}>
-      <Link className={cls.backLink} to="/incidents">
+      <Link className={cls.backLink} to={backTo}>
         ← Back to incidents
       </Link>
       <div className={cls.shell}>

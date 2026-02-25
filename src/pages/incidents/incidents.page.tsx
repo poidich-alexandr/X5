@@ -110,7 +110,7 @@ export const IncidentsPage = () => {
   if (isError) {
     return <div>Failed to load incidents</div>;
   }
-  
+
   return (
     <>
       <div className={cls.page}>
@@ -185,6 +185,7 @@ export const IncidentsPage = () => {
                   <Link
                     className={cls.row}
                     to={`/incidents/${incident.id}`}
+                    state={{ from: `${location.pathname}${location.search}` }}
                     aria-label={`Open incident ${incident.id}`}
                   >
                     <div className={cls.rowMain}>
