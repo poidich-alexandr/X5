@@ -3,8 +3,7 @@ import { type ReactElement, useEffect, useId, useMemo, useRef, useState } from '
 
 import { useCloseByEsc } from '../../hooks/use-close-by-esc';
 import { useOutsideClick } from '../../hooks/use-outside-click';
-// import ArrowDown from './assets/arrdown.svg?react';
-// import  ArrowDown  from './assets/arrdown.svg';
+import  ArrowDown  from './assets/arrdown.svg';
 import cls from './dropdown.module.scss';
 import { useMaxDropDownHeight } from './helpers/use-max-dropdown-height';
 
@@ -222,7 +221,7 @@ export const Dropdown = ({
       >
         {leftIcon && leftIcon}
         <span className={cls.triggerButtonText}>{currentText}</span>
-        <div className={cls.triggerIcon}>{customArrowIcon ? customArrowIcon : ""}</div>
+        <div className={cls.triggerIcon}>{customArrowIcon ? customArrowIcon : <ArrowDown />}</div>
       </button>
 
       <div
